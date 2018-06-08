@@ -64,6 +64,7 @@ class OrderApiTest extends Raven
 
 或者使用 checkflow 的方式进行
 
+```php
   public function testListValue ()
     {
         // 传参  注意一下，get 方式传参，数组 key 为  `query`     post put delete 等方式，key 为  `form_params` 如果上传的是文件
