@@ -1,12 +1,12 @@
 {
-    "name": "subtlephp/bran",
+    "name": "subtlephp/branx",
     "description": "A HTTP api testing framework based on phpunit and guzzle",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Frost Wong",
-            "email": "frostwong@gmail.com"
+            "name": "Wythe",
+            "email": "wythe521@gmail.com"
         }
     ],
     "require": {
