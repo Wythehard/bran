@@ -1,5 +1,5 @@
 {
-    "name": "subtlephp/branx",
+    "name": "wylib/branx",
     "description": "A HTTP api testing framework based on phpunit and guzzle",
     "type": "library",
     "license": "MIT",
