@@ -88,6 +88,12 @@ class ResponseEntity
         return $this;
     }
 
+    public function assertJsonBodyHasByDot($attribute, $dottedAttribute)
+    {
+        Assert::assertArrayHasKey($attribute, $this->parseDotSeparatedAttributes($dottedAttribute));
+        return $this;
+    }
+
     public function assertJsonBodyAttributeEquals($value, $dottedAttribute)
     {
         Assert::assertEquals($value,$this->parseDotSeparatedAttributes($dottedAttribute));
@@ -117,21 +123,56 @@ class ResponseEntity
         Assert::assertLessThanOrEqual($value, $this->parseDotSeparatedAttributes($dottedAttribute));
         return $this;
     }
-    
-    public function getAttributesByDot($dotted)
+
+    public function getData($dotted)
     {
         return $this->parseDotSeparatedAttributes($dotted);
     }
 
+
     private function parseDotSeparatedAttributes($dotted)
     {
+        if($dotted === '.') {
+            return $this->parsedBody;
+        }
+        $dotted = trim($dotted,'.');
+        $dotted = '.' . $dotted;
         $attributes = explode('.', $dotted);
-
+        array_shift($attributes);
         $data = $this->parsedBody;
         foreach ($attributes as $attribute) {
             $data = $data[$attribute];
         }
 
         return $data;
+    }
+
+    public function checkFlow($flow) {
+        if(key_exists('status', $flow)) {
+            $this->assertStatusCode($flow['status']);
+        }
+        if(key_exists('checkValues', $flow)) {
+            foreach ($flow['checkValues'] as $dotKey => $checkValue) {
+                $this->assertJsonBodyAttributeEquals($checkValue,$dotKey);
+            }
+        }
+        if(key_exists("checkRootKeys", $flow)) {
+            foreach ($flow['checkRootKeys'] as $checkValue) {
+                $this->assertJsonBodyHas($checkValue);
+            }
+        }
+        if(key_exists('checkKeys', $flow)) {
+            foreach ($flow['checkKeys'] as $dotKey => $checkValue) {
+                if(is_array($checkValue)) {
+                    foreach ($checkValue as $item) {
+                        $this->assertJsonBodyHasByDot($item,$dotKey);
+                    }
+                } else {
+                    $this->assertJsonBodyHasByDot($checkValue,$dotKey);
+                }
+
+            }
+        }
+        return $this;
     }
 }
